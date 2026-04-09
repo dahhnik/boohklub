@@ -1,0 +1,36 @@
+# Ignore bundler config
+/.bundle
+
+# Ignore default secret key files
+/config/master.key
+/config/credentials/*.key
+
+# Ignore all environment files
+.env
+.env.*
+
+# Ignore logs and temp files
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore storage (active storage uploads - even if skipped, good habit)
+/storage/*
+!/storage/.keep
+
+# Ignore assets cache
+/public/assets
+
+# macOS
+.DS_Store
+
+# Database
+*.sqlite3
+*.sqlite3-journal
+
+# Node
+/node_modules
+
+# Coverage reports
+/coverage
