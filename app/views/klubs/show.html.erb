@@ -29,13 +29,21 @@
     <% read      = @klub.book_lists.read.reverse_chrono.includes(:book) %>
 
     <% if scheduled.any? %>
-      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50 mb-2">Coming up</p>
-      <%= render "book_list_table", book_lists: scheduled, klub: @klub, show_scores: false %>
+      <div class="card bg-base-100 shadow-sm border border-base-300 overflow-hidden">
+        <div class="px-5 pt-4 pb-1">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Coming up</h4>
+        </div>
+        <%= render "book_list_table", book_lists: scheduled, klub: @klub, show_scores: false %>
+      </div>
     <% end %>
 
     <% if read.any? %>
-      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50 mb-2 <%= 'mt-6' if scheduled.any? %>">Books we've read</p>
-      <%= render "book_list_table", book_lists: read, klub: @klub, show_scores: true %>
+      <div class="card bg-base-100 shadow-sm border border-base-300 overflow-hidden <%= 'mt-4' if scheduled.any? %>">
+        <div class="px-5 pt-4 pb-1">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Books we've read</h4>
+        </div>
+        <%= render "book_list_table", book_lists: read, klub: @klub, show_scores: true %>
+      </div>
     <% end %>
 
     <% if scheduled.empty? && read.empty? %>
