@@ -1,0 +1,43 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1><%= link_to "Boohklub", root_path %></h1>
+    <div class="header-actions">
+      <span class="user-name"><%= Current.session.user.full_name %></span>
+      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <% if flash[:notice] %>
+      <div class="flash flash-notice"><%= flash[:notice] %></div>
+    <% end %>
+
+    <div class="klub-header">
+      <div>
+        <span class="activity-badge"><%= @klub.activity_type %></span>
+        <h2><%= @klub.name %></h2>
+        <p class="klub-description"><%= @klub.description.presence || "No description yet." %></p>
+      </div>
+      <% if @klub.member?(Current.session.user) %>
+        <%= button_to "Leave Klub",
+              klub_membership_path(@klub, @klub.memberships.find_by(user: Current.session.user)),
+              method: :delete, class: "btn-secondary",
+              data: { confirm: "Leave #{@klub.name}?" } %>
+      <% else %>
+        <%= button_to "Join Klub", klub_memberships_path(@klub), class: "btn-primary" %>
+      <% end %>
+    </div>
+
+    <div class="dashboard-section">
+      <h3>Members (<%= @members.count %>)</h3>
+      <ul class="member-list">
+        <% @members.each do |membership| %>
+          <li class="member-item">
+            <span class="member-name"><%= membership.user.full_name %></span>
+            <span class="role-badge role-<%= membership.role %>"><%= membership.role %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </main>
+</div>

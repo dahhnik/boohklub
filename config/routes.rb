@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
+
+  resources :klubs, only: %i[index new create show] do
+    resources :memberships, only: %i[create destroy]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

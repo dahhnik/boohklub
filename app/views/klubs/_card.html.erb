@@ -1,0 +1,18 @@
+<div class="klub-card">
+  <div class="klub-card-body">
+    <span class="activity-badge"><%= klub.activity_type %></span>
+    <h3><%= link_to klub.name, klub_path(klub) %></h3>
+    <p class="klub-description"><%= klub.description.presence || "No description yet." %></p>
+    <p class="klub-meta"><%= klub.users.count %> <%= "member".pluralize(klub.users.count) %></p>
+  </div>
+  <div class="klub-card-footer">
+    <% if joined %>
+      <%= link_to "View", klub_path(klub), class: "btn-primary btn-sm" %>
+      <%= button_to "Leave", klub_membership_path(klub, klub.memberships.find_by(user: Current.session.user)),
+            method: :delete, class: "btn-secondary btn-sm",
+            data: { confirm: "Leave #{klub.name}?" } %>
+    <% else %>
+      <%= button_to "Join", klub_memberships_path(klub), class: "btn-primary btn-sm" %>
+    <% end %>
+  </div>
+</div>
