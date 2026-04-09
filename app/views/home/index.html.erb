@@ -1,0 +1,10 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1>Boohklub</h1>
+    <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
+  </header>
+
+  <main>
+    <p>Welcome, <%= Current.session.user.first_name.presence || Current.session.user.email_address %>!</p>
+  </main>
+</div>
