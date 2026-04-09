@@ -1,30 +1,51 @@
-<div class="auth-container">
-  <h1 class="auth-title">Boohklub</h1>
-  <p class="auth-subtitle">Sign in to your account</p>
+<% content_for :full_page, "1" %>
 
-  <% if flash[:alert] %>
-    <div class="flash flash-alert"><%= flash[:alert] %></div>
-  <% end %>
-  <% if flash[:notice] %>
-    <div class="flash flash-notice"><%= flash[:notice] %></div>
-  <% end %>
+<div class="min-h-screen flex items-center justify-center p-4">
+  <div class="card bg-base-100 shadow-xl w-full max-w-sm">
+    <div class="card-body gap-4">
+      <div class="text-center pb-2">
+        <h1 class="text-3xl font-bold text-primary">📚 Boohklub</h1>
+        <p class="text-sm text-base-content/60 mt-1">Sign in to your account</p>
+      </div>
 
-  <%= form_with url: session_path, class: "auth-form" do |form| %>
-    <div class="form-group">
-      <%= form.label :email_address, "Email" %>
-      <%= form.email_field :email_address, required: true, autofocus: true,
-            autocomplete: "username", placeholder: "you@example.com",
-            value: params[:email_address] %>
+      <% if flash[:alert] %>
+        <div role="alert" class="alert alert-error text-sm py-2">
+          <span><%= flash[:alert] %></span>
+        </div>
+      <% end %>
+      <% if flash[:notice] %>
+        <div role="alert" class="alert alert-success text-sm py-2">
+          <span><%= flash[:notice] %></span>
+        </div>
+      <% end %>
+
+      <%= form_with url: session_path do |form| %>
+        <div class="mb-3">
+          <%= form.label :email_address, "Email", class: "block text-sm font-medium mb-1" %>
+          <%= form.email_field :email_address,
+                required: true, autofocus: true,
+                autocomplete: "username",
+                placeholder: "you@example.com",
+                value: params[:email_address],
+                class: "input input-bordered w-full" %>
+        </div>
+
+        <div class="mb-5">
+          <%= form.label :password, "Password", class: "block text-sm font-medium mb-1" %>
+          <%= form.password_field :password,
+                required: true,
+                autocomplete: "current-password",
+                placeholder: "••••••••",
+                maxlength: 72,
+                class: "input input-bordered w-full" %>
+        </div>
+
+        <%= form.submit "Sign in", class: "btn btn-primary w-full" %>
+      <% end %>
+
+      <p class="text-center text-sm text-base-content/60 pt-1">
+        <%= link_to "Forgot your password?", new_password_path, class: "link link-primary" %>
+      </p>
     </div>
-
-    <div class="form-group">
-      <%= form.label :password, "Password" %>
-      <%= form.password_field :password, required: true,
-            autocomplete: "current-password", placeholder: "••••••••", maxlength: 72 %>
-    </div>
-
-    <%= form.submit "Sign in", class: "btn-primary" %>
-  <% end %>
-
-  <p class="auth-link"><%= link_to "Forgot your password?", new_password_path %></p>
+  </div>
 </div>

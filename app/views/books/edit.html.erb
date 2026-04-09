@@ -1,5 +1,12 @@
-<div class="auth-container" style="max-width:520px">
-  <h2 class="auth-title">Edit Book</h2>
-  <%= render "form", book: @book, button_label: "Save Changes" %>
-  <p class="auth-link"><%= link_to "← Book catalog", books_path %></p>
+<div class="max-w-lg mx-auto">
+  <div class="mb-4">
+    <%= link_to "← Book catalog", books_path, class: "link link-primary text-sm" %>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body gap-4">
+      <h2 class="card-title text-xl">Edit Book</h2>
+      <%= render "form", book: @book, button_label: "Save Changes" %>
+    </div>
+  </div>
 </div>

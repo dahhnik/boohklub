@@ -1,83 +1,85 @@
-<div class="dashboard">
-  <header class="dashboard-header">
-    <h1><%= link_to "Boohklub", root_path %></h1>
-    <div class="header-actions">
-      <span class="user-name"><%= Current.session.user.full_name %></span>
-      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
-    </div>
-  </header>
+<div class="space-y-8">
+  <div>
+    <%= link_to "← #{@klub.name}", klub_path(@klub), class: "link link-primary text-sm" %>
+  </div>
 
-  <main class="dashboard-main">
-    <% if flash[:notice] %><div class="flash flash-notice"><%= flash[:notice] %></div><% end %>
-    <% if flash[:alert]  %><div class="flash flash-alert"><%= flash[:alert] %></div><% end %>
-
-    <p class="auth-link" style="margin-bottom:16px">
-      <%= link_to "← #{@klub.name}", klub_path(@klub) %>
-    </p>
-
-    <div class="book-detail-header">
-      <div>
-        <p class="book-period-label"><%= @book_list.period %></p>
-        <h2><%= @book_list.book.title %></h2>
-        <p class="book-detail-author">by <%= @book_list.book.author %></p>
-        <% if @book_list.book.goodreads_url.present? %>
-          <p><%= link_to "View on Goodreads →", @book_list.book.goodreads_url, target: "_blank", rel: "noopener", class: "action-link" %></p>
-        <% end %>
-        <% if @book_list.book.description.present? %>
-          <p class="book-detail-desc"><%= @book_list.book.description %></p>
-        <% end %>
-      </div>
-
-      <% avg = @book_list.average_score %>
-      <div class="score-summary">
-        <% if avg %>
-          <span class="score-big"><%= avg %></span>
-          <span class="score-denom">/ 5</span>
-          <p class="score-count"><%= @ratings.count %> <%= "rating".pluralize(@ratings.count) %></p>
-        <% else %>
-          <p class="score-empty">No ratings yet</p>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="ratings-section">
-      <h3>Ratings</h3>
-
-      <% if @ratings.any? %>
-        <ul class="ratings-list">
-          <% @ratings.each do |r| %>
-            <li class="rating-row">
-              <span class="rating-user"><%= r.user.full_name %></span>
-              <span class="rating-score-pill"><%= r.score %> / 5</span>
-              <% if r.user == Current.session.user %>
-                <%= button_to "Remove", klub_book_list_rating_path(@klub, @book_list),
-                      method: :delete, class: "action-link action-link-danger" %>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="empty-state">No ratings yet — be the first!</p>
+  <%# Book header %>
+  <div class="flex flex-col sm:flex-row gap-6">
+    <div class="flex-1">
+      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50"><%= @book_list.period %></p>
+      <h2 class="text-2xl font-bold mt-1"><%= @book_list.book.title %></h2>
+      <p class="text-base-content/60 mt-1">by <%= @book_list.book.author %></p>
+      <% if @book_list.book.goodreads_url.present? %>
+        <p class="mt-2">
+          <%= link_to "View on Goodreads →", @book_list.book.goodreads_url,
+                target: "_blank", rel: "noopener", class: "link link-primary text-sm" %>
+        </p>
+      <% end %>
+      <% if @book_list.book.description.present? %>
+        <p class="text-sm text-base-content/60 mt-3 max-w-lg"><%= @book_list.book.description %></p>
       <% end %>
     </div>
 
-    <% if @klub.member?(Current.session.user) %>
-      <div class="rating-form-section">
-        <h3><%= @my_rating.persisted? ? "Update your rating" : "Rate this book" %></h3>
+    <%# Score summary %>
+    <div class="bg-base-100 rounded-xl border border-base-300 shadow-sm flex-shrink-0 w-36 flex flex-col items-center justify-center px-4 py-6">
+      <% avg = @book_list.average_score %>
+      <% if avg %>
+        <span class="text-4xl font-bold text-primary"><%= avg %></span>
+        <span class="text-xs text-base-content/50 mt-1">out of 5</span>
+        <span class="text-xs text-base-content/40 mt-1"><%= @ratings.count %> <%= "rating".pluralize(@ratings.count) %></span>
+      <% else %>
+        <span class="text-sm text-base-content/40">No ratings yet</span>
+      <% end %>
+    </div>
+  </div>
 
-        <%= form_with url: klub_book_list_rating_path(@klub, @book_list), class: "rating-form" do |form| %>
-          <div class="score-picker">
+  <%# Ratings list %>
+  <section>
+    <h3 class="text-base font-semibold mb-3">Ratings</h3>
+    <% if @ratings.any? %>
+      <ul class="space-y-1">
+        <% @ratings.each do |r| %>
+          <li class="flex items-center gap-3 py-2 border-b border-base-200">
+            <span class="flex-1 text-sm"><%= r.user.full_name %></span>
+            <span class="badge badge-primary badge-outline badge-sm"><%= r.score %> / 5</span>
+            <% if r.user == Current.session.user %>
+              <%= button_to "Remove",
+                    klub_book_list_rating_path(@klub, @book_list),
+                    method: :delete, class: "btn btn-ghost btn-xs text-error" %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-sm text-base-content/50">No ratings yet — be the first!</p>
+    <% end %>
+  </section>
+
+  <%# Rating form %>
+  <% if @klub.member?(Current.session.user) %>
+    <section>
+      <h3 class="text-base font-semibold mb-3">
+        <%= @my_rating.persisted? ? "Update your rating" : "Rate this book" %>
+      </h3>
+
+      <%= form_with url: klub_book_list_rating_path(@klub, @book_list) do |form| %>
+        <div class="flex items-center gap-4 flex-wrap">
+          <div class="flex gap-2">
             <% (1..5).each do |n| %>
-              <label class="score-option">
+              <label class="cursor-pointer">
                 <input type="radio" name="rating[score]" value="<%= n %>"
+                       class="sr-only peer"
                        <%= "checked" if @my_rating.score == n %>>
-                <span><%= n %></span>
+                <span class="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-base-300 font-semibold text-sm text-base-content/60 cursor-pointer peer-checked:bg-primary peer-checked:border-primary peer-checked:text-primary-content hover:border-primary/60 transition-all select-none">
+                  <%= n %>
+                </span>
               </label>
             <% end %>
           </div>
-          <%= form.submit @my_rating.persisted? ? "Update" : "Submit Rating", class: "btn-primary btn-sm" %>
-        <% end %>
-      </div>
-    <% end %>
-  </main>
+          <%= form.submit @my_rating.persisted? ? "Update" : "Submit Rating",
+                class: "btn btn-primary btn-sm" %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
 </div>

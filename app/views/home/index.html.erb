@@ -1,49 +1,42 @@
-<div class="dashboard">
-  <header class="dashboard-header">
-    <h1>Boohklub</h1>
-    <div class="header-actions">
-      <span class="user-name"><%= Current.session.user.full_name %></span>
-      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
+<div class="space-y-10">
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold">My Klubs</h2>
+      <%= link_to "Create a Klub", new_klub_path, class: "btn btn-primary btn-sm" %>
     </div>
-  </header>
 
-  <main class="dashboard-main">
-    <% if flash[:notice] %>
-      <div class="flash flash-notice"><%= flash[:notice] %></div>
+    <% if Current.session.user.klubs.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% Current.session.user.klubs.each do |klub| %>
+          <%= render "klubs/card", klub: klub, joined: true %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="card bg-base-100 border border-base-300">
+        <div class="card-body text-center py-10">
+          <p class="text-base-content/50">You haven't joined any klubs yet.</p>
+          <%= link_to "Create the first one →", new_klub_path, class: "btn btn-primary btn-sm mt-3" %>
+        </div>
+      </div>
     <% end %>
+  </section>
 
-    <div class="dashboard-section">
-      <div class="section-header">
-        <h2>My Klubs</h2>
-        <%= link_to "Create a Klub", new_klub_path, class: "btn-primary btn-sm" %>
-      </div>
+  <div class="divider"></div>
 
-      <% if Current.session.user.klubs.any? %>
-        <div class="klub-grid">
-          <% Current.session.user.klubs.each do |klub| %>
-            <%= render "klubs/card", klub: klub, joined: true %>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="empty-state">You haven't joined any klubs yet.</p>
-      <% end %>
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold">Discover Klubs</h2>
     </div>
 
-    <div class="dashboard-section">
-      <div class="section-header">
-        <h2>Discover Klubs</h2>
+    <% other_klubs = Klub.where.not(id: Current.session.user.klubs) %>
+    <% if other_klubs.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% other_klubs.each do |klub| %>
+          <%= render "klubs/card", klub: klub, joined: false %>
+        <% end %>
       </div>
-
-      <% other_klubs = Klub.where.not(id: Current.session.user.klubs) %>
-      <% if other_klubs.any? %>
-        <div class="klub-grid">
-          <% other_klubs.each do |klub| %>
-            <%= render "klubs/card", klub: klub, joined: false %>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="empty-state">No other klubs to join right now.</p>
-      <% end %>
-    </div>
-  </main>
+    <% else %>
+      <p class="text-base-content/50 text-sm">No other klubs to discover right now.</p>
+    <% end %>
+  </section>
 </div>

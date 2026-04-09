@@ -1,35 +1,46 @@
-<div class="auth-container">
-  <h2 class="auth-title">Create a Klub</h2>
+<div class="max-w-lg mx-auto">
+  <div class="mb-4">
+    <%= link_to "← Back to dashboard", root_path, class: "link link-primary text-sm" %>
+  </div>
 
-  <% if @klub.errors.any? %>
-    <div class="flash flash-alert">
-      <% @klub.errors.full_messages.each do |msg| %>
-        <p><%= msg %></p>
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body gap-4">
+      <h2 class="card-title text-xl">Create a Klub</h2>
+
+      <% if @klub.errors.any? %>
+        <div role="alert" class="alert alert-error">
+          <ul class="list-disc list-inside text-sm">
+            <% @klub.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with model: @klub do |form| %>
+        <div class="mb-3">
+          <%= form.label :name, "Klub name", class: "block text-sm font-medium mb-1" %>
+          <%= form.text_field :name, placeholder: "e.g. Booh", required: true,
+                class: "input input-bordered w-full" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :activity_type, "Type", class: "block text-sm font-medium mb-1" %>
+          <%= form.select :activity_type,
+                Klub::ACTIVITY_TYPES.map { |t| [t.capitalize, t] },
+                { prompt: "Choose a type" },
+                required: true, class: "select select-bordered w-full" %>
+        </div>
+
+        <div class="mb-5">
+          <%= form.label :description, "Description", class: "block text-sm font-medium mb-1" %>
+          <%= form.text_area :description,
+                placeholder: "What's this klub about?", rows: 3,
+                class: "textarea textarea-bordered w-full" %>
+        </div>
+
+        <%= form.submit "Create Klub", class: "btn btn-primary w-full" %>
       <% end %>
     </div>
-  <% end %>
-
-  <%= form_with model: @klub, class: "auth-form" do |form| %>
-    <div class="form-group">
-      <%= form.label :name, "Klub name" %>
-      <%= form.text_field :name, placeholder: "e.g. Booh", required: true %>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :activity_type, "Type" %>
-      <%= form.select :activity_type, Klub::ACTIVITY_TYPES.map { |t| [t.capitalize, t] },
-            { prompt: "Choose a type" }, required: true,
-            style: "width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:1rem;" %>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :description, "Description" %>
-      <%= form.text_area :description, placeholder: "What's this klub about?", rows: 3,
-            style: "width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:1rem;" %>
-    </div>
-
-    <%= form.submit "Create Klub", class: "btn-primary" %>
-  <% end %>
-
-  <p class="auth-link"><%= link_to "← Back to dashboard", root_path %></p>
+  </div>
 </div>

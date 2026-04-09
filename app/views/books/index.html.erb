@@ -1,38 +1,43 @@
-<div class="dashboard">
-  <header class="dashboard-header">
-    <h1><%= link_to "Boohklub", root_path %></h1>
-    <div class="header-actions">
-      <%= link_to "Add Book", new_book_path, class: "btn-primary btn-sm" %>
-      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
-    </div>
-  </header>
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-bold">Book Catalog</h2>
+    <%= link_to "Add Book", new_book_path, class: "btn btn-primary btn-sm" %>
+  </div>
 
-  <main class="dashboard-main">
-    <h2 style="margin-bottom:16px">Book Catalog</h2>
-
-    <% if @books.any? %>
-      <table class="book-table">
+  <% if @books.any? %>
+    <div class="overflow-x-auto">
+      <table class="table table-sm">
         <thead>
-          <tr><th>Title</th><th>Author</th><th>Link</th><th></th></tr>
+          <tr class="text-base-content/50 text-xs uppercase tracking-wider">
+            <th>Title</th>
+            <th>Author</th>
+            <th>Link</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
           <% @books.each do |book| %>
-            <tr>
-              <td class="book-title"><%= book.title %></td>
-              <td class="book-author"><%= book.author %></td>
-              <td><%= link_to "Goodreads →", book.goodreads_url, target: "_blank", rel: "noopener" if book.goodreads_url.present? %></td>
-              <td class="book-actions">
-                <%= link_to "Edit", edit_book_path(book), class: "action-link" %>
+            <tr class="hover">
+              <td class="font-medium"><%= book.title %></td>
+              <td class="text-sm text-base-content/60"><%= book.author %></td>
+              <td>
+                <% if book.goodreads_url.present? %>
+                  <%= link_to "Goodreads →", book.goodreads_url,
+                        target: "_blank", rel: "noopener", class: "link link-primary text-sm" %>
+                <% end %>
+              </td>
+              <td class="text-right whitespace-nowrap">
+                <%= link_to "Edit", edit_book_path(book), class: "btn btn-ghost btn-xs" %>
                 <%= button_to "Delete", book_path(book), method: :delete,
-                      class: "action-link action-link-danger",
+                      class: "btn btn-ghost btn-xs text-error",
                       data: { confirm: "Delete #{book.title}?" } %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    <% else %>
-      <p class="empty-state">No books in the catalog yet.</p>
-    <% end %>
-  </main>
+    </div>
+  <% else %>
+    <p class="text-sm text-base-content/50">No books in the catalog yet.</p>
+  <% end %>
 </div>

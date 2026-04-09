@@ -1,72 +1,68 @@
-<div class="dashboard">
-  <header class="dashboard-header">
-    <h1><%= link_to "Boohklub", root_path %></h1>
-    <div class="header-actions">
-      <span class="user-name"><%= Current.session.user.full_name %></span>
-      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
+<div class="space-y-8">
+  <%# Klub header %>
+  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+    <div>
+      <span class="badge badge-outline"><%= @klub.activity_type %></span>
+      <h2 class="text-2xl font-bold mt-2"><%= @klub.name %></h2>
+      <p class="text-base-content/60 mt-1 max-w-lg">
+        <%= @klub.description.presence || "No description yet." %>
+      </p>
     </div>
-  </header>
+    <div class="flex gap-2 flex-shrink-0">
+      <% if @klub.member?(Current.session.user) %>
+        <%= link_to "Add Book", new_klub_book_list_path(@klub), class: "btn btn-primary btn-sm" %>
+        <%= button_to "Leave Klub",
+              klub_membership_path(@klub, @klub.memberships.find_by(user: Current.session.user)),
+              method: :delete, class: "btn btn-ghost btn-sm",
+              data: { confirm: "Leave #{@klub.name}?" } %>
+      <% else %>
+        <%= button_to "Join Klub", klub_memberships_path(@klub), class: "btn btn-primary btn-sm" %>
+      <% end %>
+    </div>
+  </div>
 
-  <main class="dashboard-main">
-    <% if flash[:notice] %>
-      <div class="flash flash-notice"><%= flash[:notice] %></div>
-    <% end %>
-    <% if flash[:alert] %>
-      <div class="flash flash-alert"><%= flash[:alert] %></div>
+  <%# Reading Schedule %>
+  <section>
+    <h3 class="text-lg font-semibold mb-4">Reading Schedule</h3>
+
+    <% scheduled = @klub.book_lists.scheduled.chronological.includes(:book) %>
+    <% read      = @klub.book_lists.read.reverse_chrono.includes(:book) %>
+
+    <% if scheduled.any? %>
+      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50 mb-2">Coming up</p>
+      <%= render "book_list_table", book_lists: scheduled, klub: @klub, show_scores: false %>
     <% end %>
 
-    <div class="klub-header">
-      <div>
-        <span class="activity-badge"><%= @klub.activity_type %></span>
-        <h2><%= @klub.name %></h2>
-        <p class="klub-description"><%= @klub.description.presence || "No description yet." %></p>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;">
+    <% if read.any? %>
+      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50 mb-2 <%= 'mt-6' if scheduled.any? %>">Books we've read</p>
+      <%= render "book_list_table", book_lists: read, klub: @klub, show_scores: true %>
+    <% end %>
+
+    <% if scheduled.empty? && read.empty? %>
+      <div class="text-center py-10 text-base-content/50">
+        <p>No books on the list yet.</p>
         <% if @klub.member?(Current.session.user) %>
-          <%= link_to "Add Book", new_klub_book_list_path(@klub), class: "btn-primary btn-sm" %>
-          <%= button_to "Leave Klub",
-                klub_membership_path(@klub, @klub.memberships.find_by(user: Current.session.user)),
-                method: :delete, class: "btn-secondary btn-sm",
-                data: { confirm: "Leave #{@klub.name}?" } %>
-        <% else %>
-          <%= button_to "Join Klub", klub_memberships_path(@klub), class: "btn-primary btn-sm" %>
+          <%= link_to "Add the first one →", new_klub_book_list_path(@klub), class: "btn btn-primary btn-sm mt-3" %>
         <% end %>
       </div>
-    </div>
+    <% end %>
+  </section>
 
-    <%# Reading list %>
-    <div class="dashboard-section">
-      <h3>Reading Schedule</h3>
-
-      <% scheduled = @klub.book_lists.scheduled.chronological.includes(:book) %>
-      <% read      = @klub.book_lists.read.reverse_chrono.includes(:book) %>
-
-      <% if scheduled.any? %>
-        <h4 class="list-subheading">Coming up</h4>
-        <%= render "book_list_table", book_lists: scheduled, klub: @klub, show_scores: false %>
+  <%# Members %>
+  <section>
+    <h3 class="text-lg font-semibold mb-3">Members (<%= @members.count %>)</h3>
+    <ul class="space-y-1">
+      <% @members.each do |membership| %>
+        <li class="flex items-center gap-3 py-2 border-b border-base-200">
+          <span class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center text-xs font-bold flex-shrink-0">
+            <%= membership.user.full_name.split.map { |n| n[0] }.first(2).join %>
+          </span>
+          <span class="flex-1 text-sm"><%= membership.user.full_name %></span>
+          <span class="badge badge-sm <%= membership.role == 'admin' ? 'badge-warning' : 'badge-ghost' %>">
+            <%= membership.role %>
+          </span>
+        </li>
       <% end %>
-
-      <% if read.any? %>
-        <h4 class="list-subheading">Books we've read</h4>
-        <%= render "book_list_table", book_lists: read, klub: @klub, show_scores: true %>
-      <% end %>
-
-      <% if scheduled.empty? && read.empty? %>
-        <p class="empty-state">No books on the list yet. <%= link_to "Add the first one →", new_klub_book_list_path(@klub) if @klub.member?(Current.session.user) %></p>
-      <% end %>
-    </div>
-
-    <%# Members %>
-    <div class="dashboard-section">
-      <h3>Members (<%= @members.count %>)</h3>
-      <ul class="member-list">
-        <% @members.each do |membership| %>
-          <li class="member-item">
-            <span class="member-name"><%= membership.user.full_name %></span>
-            <span class="role-badge role-<%= membership.role %>"><%= membership.role %></span>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </main>
+    </ul>
+  </section>
 </div>

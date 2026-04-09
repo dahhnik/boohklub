@@ -1,4 +1,8 @@
-<div class="auth-container" style="max-width:520px">
-  <h2 class="auth-title">Edit Reading List Entry</h2>
-  <%= render "form", klub: @klub, book_list: @book_list, button_label: "Save Changes" %>
+<div class="max-w-lg mx-auto">
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body gap-4">
+      <h2 class="card-title text-xl">Edit Reading List Entry</h2>
+      <%= render "form", klub: @klub, book_list: @book_list, button_label: "Save Changes" %>
+    </div>
+  </div>
 </div>

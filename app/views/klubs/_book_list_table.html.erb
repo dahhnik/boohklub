@@ -1,40 +1,43 @@
-<table class="book-table">
-  <thead>
-    <tr>
-      <th>Month</th>
-      <th>Title</th>
-      <th>Author</th>
-      <% if show_scores %><th>Score</th><% end %>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% book_lists.each do |entry| %>
-      <tr>
-        <td class="book-period"><%= entry.period %></td>
-        <td class="book-title">
-          <%= link_to entry.book.title, klub_book_list_path(klub, entry) %>
-        </td>
-        <td class="book-author"><%= entry.book.author %></td>
-        <% if show_scores %>
-          <td class="book-score">
-            <% avg = entry.average_score %>
-            <% if avg %>
-              <span class="score-badge"><%= avg %> / 5</span>
-            <% else %>
-              <span class="score-none">—</span>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead>
+      <tr class="text-base-content/50 text-xs uppercase tracking-wider">
+        <th>Month</th>
+        <th>Title</th>
+        <th>Author</th>
+        <% if show_scores %><th>Score</th><% end %>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% book_lists.each do |entry| %>
+        <tr class="hover">
+          <td class="whitespace-nowrap text-sm text-base-content/60"><%= entry.period %></td>
+          <td class="font-medium">
+            <%= link_to entry.book.title, klub_book_list_path(klub, entry),
+                  class: "hover:text-primary transition-colors" %>
+          </td>
+          <td class="text-sm text-base-content/60"><%= entry.book.author %></td>
+          <% if show_scores %>
+            <td>
+              <% avg = entry.average_score %>
+              <% if avg %>
+                <span class="badge badge-primary badge-outline badge-sm"><%= avg %> / 5</span>
+              <% else %>
+                <span class="text-base-content/30 text-sm">—</span>
+              <% end %>
+            </td>
+          <% end %>
+          <td class="text-right whitespace-nowrap">
+            <% if klub.member?(Current.session.user) %>
+              <%= link_to "Edit", edit_klub_book_list_path(klub, entry), class: "btn btn-ghost btn-xs" %>
+              <%= button_to "Remove", klub_book_list_path(klub, entry), method: :delete,
+                    class: "btn btn-ghost btn-xs text-error",
+                    data: { confirm: "Remove #{entry.book.title} from the list?" } %>
             <% end %>
           </td>
-        <% end %>
-        <td class="book-actions">
-          <% if klub.member?(Current.session.user) %>
-            <%= link_to "Edit", edit_klub_book_list_path(klub, entry), class: "action-link" %>
-            <%= button_to "Remove", klub_book_list_path(klub, entry), method: :delete,
-                  class: "action-link action-link-danger",
-                  data: { confirm: "Remove #{entry.book.title} from the list?" } %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
