@@ -221,6 +221,200 @@ body {
 /* Button sizes */
 .btn-sm { padding: 6px 12px; font-size: 0.8125rem; }
 
+/* Book tables */
+.book-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.book-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  padding: 8px 12px 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.book-table td {
+  padding: 12px 12px 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.book-period { color: #6b7280; font-size: 0.875rem; white-space: nowrap; width: 130px; }
+.book-title  { font-weight: 500; }
+.book-title a { color: inherit; text-decoration: none; }
+.book-title a:hover { color: #4f46e5; }
+.book-author { color: #6b7280; }
+.book-actions { text-align: right; white-space: nowrap; }
+
+.action-link {
+  font-size: 0.8125rem;
+  color: #4f46e5;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 12px;
+}
+
+.action-link:hover { text-decoration: underline; }
+.action-link-danger { color: #dc2626; }
+
+.list-subheading {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  margin: 20px 0 4px;
+}
+
+/* Form helpers */
+.form-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin: 20px 0 12px;
+}
+
+.form-row { display: flex; gap: 16px; }
+.form-row .form-group { flex: 1; }
+
+.auth-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fff;
+  outline: none;
+}
+
+.auth-form select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.auth-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+}
+
+.auth-form textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* Book detail page */
+.book-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 24px;
+}
+
+.book-period-label { font-size: 0.8125rem; color: #9ca3af; margin-bottom: 4px; }
+.book-detail-author { color: #6b7280; margin: 4px 0 8px; }
+.book-detail-desc { color: #6b7280; font-size: 0.9375rem; margin-top: 12px; max-width: 540px; }
+
+.score-summary {
+  text-align: center;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 32px;
+  flex-shrink: 0;
+}
+
+.score-big   { font-size: 2.5rem; font-weight: 700; color: #1a1a1a; }
+.score-denom { font-size: 1rem; color: #9ca3af; }
+.score-count { font-size: 0.8125rem; color: #9ca3af; margin-top: 4px; }
+.score-empty { color: #9ca3af; font-size: 0.875rem; }
+
+/* Ratings list */
+.ratings-section { margin-bottom: 32px; }
+.ratings-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
+
+.ratings-list { list-style: none; }
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.rating-user  { flex: 1; font-size: 0.9375rem; }
+
+.rating-score-pill {
+  background: #ede9fe;
+  color: #6d28d9;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 3px 10px;
+  border-radius: 9999px;
+}
+
+/* Rating form */
+.rating-form-section { margin-bottom: 32px; }
+.rating-form-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
+
+.rating-form { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+.score-picker { display: flex; gap: 6px; }
+
+.score-option input[type="radio"] { display: none; }
+
+.score-option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.score-option input:checked + span {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+.score-option span:hover { border-color: #4f46e5; color: #4f46e5; }
+
+/* Score in table */
+.book-score { width: 90px; }
+.score-badge {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #6d28d9;
+  background: #ede9fe;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+.score-none { color: #d1d5db; }
+
 /* Flash messages */
 .flash {
   padding: 10px 14px;

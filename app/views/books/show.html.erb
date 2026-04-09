@@ -1,0 +1,16 @@
+<div class="auth-container" style="max-width:520px">
+  <h2 class="auth-title"><%= @book.title %></h2>
+  <p style="color:#6b7280;margin-bottom:8px">by <%= @book.author %></p>
+  <% if @book.goodreads_url.present? %>
+    <p><%= link_to "View on Goodreads →", @book.goodreads_url, target: "_blank", rel: "noopener" %></p>
+  <% end %>
+  <% if @book.description.present? %>
+    <p style="margin-top:16px"><%= @book.description %></p>
+  <% end %>
+  <div style="margin-top:24px;display:flex;gap:8px;">
+    <%= link_to "Edit", edit_book_path(@book), class: "btn-primary btn-sm" %>
+    <%= button_to "Delete", book_path(@book), method: :delete, class: "btn-secondary btn-sm",
+          data: { confirm: "Delete this book?" } %>
+  </div>
+  <p class="auth-link"><%= link_to "← Book catalog", books_path %></p>
+</div>

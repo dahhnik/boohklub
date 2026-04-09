@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :klubs, through: :memberships
+  has_many :ratings, dependent: :destroy
 
   enum :role, { member: "member", admin: "admin" }
 

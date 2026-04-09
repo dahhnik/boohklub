@@ -11,6 +11,9 @@
     <% if flash[:notice] %>
       <div class="flash flash-notice"><%= flash[:notice] %></div>
     <% end %>
+    <% if flash[:alert] %>
+      <div class="flash flash-alert"><%= flash[:alert] %></div>
+    <% end %>
 
     <div class="klub-header">
       <div>
@@ -18,16 +21,42 @@
         <h2><%= @klub.name %></h2>
         <p class="klub-description"><%= @klub.description.presence || "No description yet." %></p>
       </div>
-      <% if @klub.member?(Current.session.user) %>
-        <%= button_to "Leave Klub",
-              klub_membership_path(@klub, @klub.memberships.find_by(user: Current.session.user)),
-              method: :delete, class: "btn-secondary",
-              data: { confirm: "Leave #{@klub.name}?" } %>
-      <% else %>
-        <%= button_to "Join Klub", klub_memberships_path(@klub), class: "btn-primary" %>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <% if @klub.member?(Current.session.user) %>
+          <%= link_to "Add Book", new_klub_book_list_path(@klub), class: "btn-primary btn-sm" %>
+          <%= button_to "Leave Klub",
+                klub_membership_path(@klub, @klub.memberships.find_by(user: Current.session.user)),
+                method: :delete, class: "btn-secondary btn-sm",
+                data: { confirm: "Leave #{@klub.name}?" } %>
+        <% else %>
+          <%= button_to "Join Klub", klub_memberships_path(@klub), class: "btn-primary btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Reading list %>
+    <div class="dashboard-section">
+      <h3>Reading Schedule</h3>
+
+      <% scheduled = @klub.book_lists.scheduled.chronological.includes(:book) %>
+      <% read      = @klub.book_lists.read.reverse_chrono.includes(:book) %>
+
+      <% if scheduled.any? %>
+        <h4 class="list-subheading">Coming up</h4>
+        <%= render "book_list_table", book_lists: scheduled, klub: @klub, show_scores: false %>
+      <% end %>
+
+      <% if read.any? %>
+        <h4 class="list-subheading">Books we've read</h4>
+        <%= render "book_list_table", book_lists: read, klub: @klub, show_scores: true %>
+      <% end %>
+
+      <% if scheduled.empty? && read.empty? %>
+        <p class="empty-state">No books on the list yet. <%= link_to "Add the first one →", new_klub_book_list_path(@klub) if @klub.member?(Current.session.user) %></p>
       <% end %>
     </div>
 
+    <%# Members %>
     <div class="dashboard-section">
       <h3>Members (<%= @members.count %>)</h3>
       <ul class="member-list">

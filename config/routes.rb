@@ -2,8 +2,12 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  resources :books
   resources :klubs, only: %i[index new create show] do
     resources :memberships, only: %i[create destroy]
+    resources :book_lists, only: %i[show new create edit update destroy] do
+      resource :rating, only: %i[create destroy]
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

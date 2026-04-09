@@ -8,6 +8,8 @@ class KlubsController < ApplicationController
 
   def show
     @members = @klub.memberships.includes(:user)
+    # Preload ratings so average_score doesn't cause N+1 queries
+    @klub.book_lists.includes(:ratings)
   end
 
   def new

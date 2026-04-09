@@ -1,0 +1,38 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1><%= link_to "Boohklub", root_path %></h1>
+    <div class="header-actions">
+      <%= link_to "Add Book", new_book_path, class: "btn-primary btn-sm" %>
+      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <h2 style="margin-bottom:16px">Book Catalog</h2>
+
+    <% if @books.any? %>
+      <table class="book-table">
+        <thead>
+          <tr><th>Title</th><th>Author</th><th>Link</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% @books.each do |book| %>
+            <tr>
+              <td class="book-title"><%= book.title %></td>
+              <td class="book-author"><%= book.author %></td>
+              <td><%= link_to "Goodreads →", book.goodreads_url, target: "_blank", rel: "noopener" if book.goodreads_url.present? %></td>
+              <td class="book-actions">
+                <%= link_to "Edit", edit_book_path(book), class: "action-link" %>
+                <%= button_to "Delete", book_path(book), method: :delete,
+                      class: "action-link action-link-danger",
+                      data: { confirm: "Delete #{book.title}?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty-state">No books in the catalog yet.</p>
+    <% end %>
+  </main>
+</div>

@@ -1,0 +1,83 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1><%= link_to "Boohklub", root_path %></h1>
+    <div class="header-actions">
+      <span class="user-name"><%= Current.session.user.full_name %></span>
+      <%= button_to "Sign out", session_path, method: :delete, class: "btn-secondary" %>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <% if flash[:notice] %><div class="flash flash-notice"><%= flash[:notice] %></div><% end %>
+    <% if flash[:alert]  %><div class="flash flash-alert"><%= flash[:alert] %></div><% end %>
+
+    <p class="auth-link" style="margin-bottom:16px">
+      <%= link_to "← #{@klub.name}", klub_path(@klub) %>
+    </p>
+
+    <div class="book-detail-header">
+      <div>
+        <p class="book-period-label"><%= @book_list.period %></p>
+        <h2><%= @book_list.book.title %></h2>
+        <p class="book-detail-author">by <%= @book_list.book.author %></p>
+        <% if @book_list.book.goodreads_url.present? %>
+          <p><%= link_to "View on Goodreads →", @book_list.book.goodreads_url, target: "_blank", rel: "noopener", class: "action-link" %></p>
+        <% end %>
+        <% if @book_list.book.description.present? %>
+          <p class="book-detail-desc"><%= @book_list.book.description %></p>
+        <% end %>
+      </div>
+
+      <% avg = @book_list.average_score %>
+      <div class="score-summary">
+        <% if avg %>
+          <span class="score-big"><%= avg %></span>
+          <span class="score-denom">/ 5</span>
+          <p class="score-count"><%= @ratings.count %> <%= "rating".pluralize(@ratings.count) %></p>
+        <% else %>
+          <p class="score-empty">No ratings yet</p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="ratings-section">
+      <h3>Ratings</h3>
+
+      <% if @ratings.any? %>
+        <ul class="ratings-list">
+          <% @ratings.each do |r| %>
+            <li class="rating-row">
+              <span class="rating-user"><%= r.user.full_name %></span>
+              <span class="rating-score-pill"><%= r.score %> / 5</span>
+              <% if r.user == Current.session.user %>
+                <%= button_to "Remove", klub_book_list_rating_path(@klub, @book_list),
+                      method: :delete, class: "action-link action-link-danger" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="empty-state">No ratings yet — be the first!</p>
+      <% end %>
+    </div>
+
+    <% if @klub.member?(Current.session.user) %>
+      <div class="rating-form-section">
+        <h3><%= @my_rating.persisted? ? "Update your rating" : "Rate this book" %></h3>
+
+        <%= form_with url: klub_book_list_rating_path(@klub, @book_list), class: "rating-form" do |form| %>
+          <div class="score-picker">
+            <% (1..5).each do |n| %>
+              <label class="score-option">
+                <input type="radio" name="rating[score]" value="<%= n %>"
+                       <%= "checked" if @my_rating.score == n %>>
+                <span><%= n %></span>
+              </label>
+            <% end %>
+          </div>
+          <%= form.submit @my_rating.persisted? ? "Update" : "Submit Rating", class: "btn-primary btn-sm" %>
+        <% end %>
+      </div>
+    <% end %>
+  </main>
+</div>

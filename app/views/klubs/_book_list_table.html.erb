@@ -1,0 +1,40 @@
+<table class="book-table">
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Title</th>
+      <th>Author</th>
+      <% if show_scores %><th>Score</th><% end %>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% book_lists.each do |entry| %>
+      <tr>
+        <td class="book-period"><%= entry.period %></td>
+        <td class="book-title">
+          <%= link_to entry.book.title, klub_book_list_path(klub, entry) %>
+        </td>
+        <td class="book-author"><%= entry.book.author %></td>
+        <% if show_scores %>
+          <td class="book-score">
+            <% avg = entry.average_score %>
+            <% if avg %>
+              <span class="score-badge"><%= avg %> / 5</span>
+            <% else %>
+              <span class="score-none">—</span>
+            <% end %>
+          </td>
+        <% end %>
+        <td class="book-actions">
+          <% if klub.member?(Current.session.user) %>
+            <%= link_to "Edit", edit_klub_book_list_path(klub, entry), class: "action-link" %>
+            <%= button_to "Remove", klub_book_list_path(klub, entry), method: :delete,
+                  class: "action-link action-link-danger",
+                  data: { confirm: "Remove #{entry.book.title} from the list?" } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

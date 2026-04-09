@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  klub: one
+  book: one
+  month: 1
+  year: 1
+
+two:
+  klub: two
+  book: two
+  month: 1
+  year: 1

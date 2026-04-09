@@ -1,0 +1,57 @@
+<% errors = book_list.errors.any? || book_list.book.errors.any? %>
+
+<% if errors %>
+  <div class="flash flash-alert">
+    <% (book_list.errors.full_messages + book_list.book.errors.full_messages).each do |msg| %>
+      <p><%= msg %></p>
+    <% end %>
+  </div>
+<% end %>
+
+<%= form_with model: [ klub, book_list ], class: "auth-form" do |form| %>
+  <h3 class="form-section-title">Book details</h3>
+
+  <div class="form-group">
+    <%= form.label :title, "Title" %>
+    <%= form.text_field :title, value: book_list.book&.title, required: true, placeholder: "e.g. Dune" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :author, "Author" %>
+    <%= form.text_field :author, value: book_list.book&.author, required: true, placeholder: "e.g. Frank Herbert" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :goodreads_url, "Goodreads URL" %>
+    <%= form.url_field :goodreads_url, value: book_list.book&.goodreads_url, placeholder: "https://www.goodreads.com/book/show/..." %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description, "Description" %>
+    <%= form.text_area :description, value: book_list.book&.description, rows: 3, placeholder: "Optional blurb" %>
+  </div>
+
+  <h3 class="form-section-title">Schedule</h3>
+
+  <div class="form-row">
+    <div class="form-group">
+      <%= form.label :month, "Month" %>
+      <%= form.select :month,
+            BookList::MONTHS.each_with_index.map { |name, i| [name, i + 1] },
+            { selected: book_list.month || Date.today.month },
+            required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :year, "Year" %>
+      <%= form.select :year,
+            (Date.today.year - 2..Date.today.year + 2).to_a,
+            { selected: book_list.year || Date.today.year },
+            required: true %>
+    </div>
+  </div>
+
+  <%= form.submit button_label, class: "btn-primary" %>
+<% end %>
+
+<p class="auth-link"><%= link_to "← Back to #{klub.name}", klub_path(klub) %></p>

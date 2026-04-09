@@ -3,6 +3,8 @@ class Klub < ApplicationRecord
 
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
+  has_many :book_lists, dependent: :destroy
+  has_many :books, through: :book_lists
 
   validates :name, presence: true
   validates :activity_type, inclusion: { in: ACTIVITY_TYPES }
